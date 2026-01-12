@@ -214,23 +214,16 @@
 
         class ContactFormRcV3 {
             constructor(form) {
-                console.log('[reCAPTCHA Debug] Initializing form:', form);
-
                 try {
                     this.form = document.querySelector(form);
                     this.submit = this.form.querySelector(".btn-submit-js");
-                    console.log('[reCAPTCHA Debug] Form found:', !!this.form);
-                    console.log('[reCAPTCHA Debug] Submit button found:', !!this.submit);
-
                     this.events();
                 } catch (err) {
-                    console.error('[reCAPTCHA Debug] Constructor error:', err.message);
+                    console.log(err.message);
                 }
             }
 
             events() {
-                console.log('[reCAPTCHA Debug] Setting up events');
-
                 $(this.form).find(".field-js").on("keyup", () => {
                     var filled = false;
 
@@ -251,41 +244,25 @@
                 });
 
                 this.form.addEventListener("submit", (e) => {
-                    /* this.submit.addEventListener("click", (e) => { */
                     e.preventDefault();
                     e.stopPropagation();
-                    console.log('[reCAPTCHA Debug] ========== FORM SUBMIT START ==========');
 
                     const form = $(this.form);
                     const formElement = this.form;
 
-                    // Check if grecaptcha is loaded
-                    console.log('[reCAPTCHA Debug] Checking grecaptcha availability...');
-                    console.log('[reCAPTCHA Debug] typeof grecaptcha:', typeof grecaptcha);
-                    
                     if (typeof grecaptcha === 'undefined') {
-                        console.error('[reCAPTCHA Debug] ❌ grecaptcha is UNDEFINED - script not loaded!');
                         form.parent().find('.form__error').html("reCAPTCHA is still loading. Please wait a moment and try again.").addClass("active");
                         return;
                     }
-                    console.log('[reCAPTCHA Debug] ✅ grecaptcha is available');
 
-                    console.log('[reCAPTCHA Debug] Site Key being used:', "<?= Configuration::$rc_site_key ?>");
-                    
                     grecaptcha.ready(() => {
-                        console.log('[reCAPTCHA Debug] ✅ grecaptcha.ready() fired');
-                        console.log('[reCAPTCHA Debug] Form validity:', formElement.checkValidity());
-                        
                         if (formElement.checkValidity()) {
-                            console.log('[reCAPTCHA Debug] Executing grecaptcha.execute()...');
 
                             grecaptcha.execute("<?= Configuration::$rc_site_key ?>", {
                                 action: 'submit'
                             }).then(function(token) {
-                                console.log('[reCAPTCHA Debug] ✅ Token received:', token ? token.substring(0, 50) + '...' : 'EMPTY');
 
                                 if (!token) {
-                                    console.error('[reCAPTCHA Debug] ❌ Token is empty/null!');
                                     form.parent().find('.form__error').html("reCAPTCHA verification failed. Please refresh and try again.").addClass("active");
                                     return;
                                 }
@@ -293,13 +270,6 @@
                                 const action = form.attr("send");
                                 const title = form.attr("title");
                                 const redirectOnSubmit = form.attr("data-redirect");
-                                
-                                console.log('[reCAPTCHA Debug] AJAX Request Details:');
-                                console.log('[reCAPTCHA Debug] - URL:', ajaxUrl);
-                                console.log('[reCAPTCHA Debug] - Action:', action);
-                                console.log('[reCAPTCHA Debug] - Title:', title);
-                                console.log('[reCAPTCHA Debug] - Redirect:', redirectOnSubmit);
-                                console.log('[reCAPTCHA Debug] Sending AJAX request...');
 
                                 $.ajax({
                                     type: 'POST',
@@ -307,10 +277,8 @@
                                     dataType: 'html',
                                     data: form.serialize() + '&action=' + action + '&title=' + title + '&g-recaptcha-response=' + token,
                                     success: function(resp) {
-                                        console.log('[reCAPTCHA Debug] ✅ AJAX Response:', resp);
 
                                         if (resp === 'ok') {
-                                            console.log('[reCAPTCHA Debug] ✅ Form submitted successfully!');
 
                                             form.parent().find('.form__error').removeClass("active");
 
@@ -321,7 +289,6 @@
                                             );
 
                                             if (redirectOnSubmit) {
-                                                console.log('[reCAPTCHA Debug] Redirecting to:', redirectOnSubmit);
                                                 window.location.href = redirectOnSubmit;
                                             } else {
                                                 form.find(".form__thanks").addClass("active");
@@ -331,34 +298,25 @@
                                             }
 
                                         } else {
-                                            console.error('[reCAPTCHA Debug] ❌ Server returned error:', resp);
                                             form.parent().find('.form__error').html(resp).addClass("active");
                                             form.parent().find('.form__thanks').removeClass("active");
                                         }
                                     },
-                                    error: function(xhr, status, error) {
-                                        console.error('[reCAPTCHA Debug] ❌ AJAX Error:', status, error);
-                                        console.error('[reCAPTCHA Debug] XHR Response:', xhr.responseText);
+                                    error: function() {
                                         form.parent().find('.form__error').html("There was an error trying to send your message. Please try again later.").addClass("active");
                                         form.parent().find('.form__error').addClass("active");
                                         form.parent().find('.form__thanks').removeClass("active");
                                     }
-                                }).always(function() {
-                                    console.log('[reCAPTCHA Debug] ========== FORM SUBMIT END ==========');
-                                })
+                                }).always(function() {})
                             }).catch(function(error) {
-                                console.error('[reCAPTCHA Debug] ❌ grecaptcha.execute() FAILED:', error);
-                                console.error('[reCAPTCHA Debug] This usually means: invalid site key OR domain not registered');
-                                form.parent().find('.form__error').html("reCAPTCHA error: " + error.message + ". Please check domain is registered.").addClass("active");
+                                form.parent().find('.form__error').html("reCAPTCHA error. Please refresh and try again.").addClass("active");
                             });
                         } else {
-                            console.log('[reCAPTCHA Debug] ❌ Form validation failed');
                             formElement.reportValidity();
                         }
                     });
 
                 });
-                console.log('[reCAPTCHA Debug] ✅ Event listeners attached');
             }
 
         }

@@ -1,23 +1,16 @@
 (function ($) {
     class ContactFormRcV3 {
         constructor(form) {
-            console.log('[Contact Form Debug] Initializing form:', form);
-
             try {
                 this.form = document.querySelector(form);
                 this.submit = this.form.querySelector(".btn-submit-js");
-                console.log('[Contact Form Debug] Form found:', !!this.form);
-                console.log('[Contact Form Debug] Submit button found:', !!this.submit);
-
                 this.events();
             } catch (err) {
-                console.error('[Contact Form Debug] Constructor error:', err.message);
+                console.log(err.message);
             }
         }
 
         events() {
-            console.log('[Contact Form Debug] Setting up events');
-
             $(this.form).find(".field-js").on("keyup", () => {
                 var filled = false;
 
@@ -39,48 +32,29 @@
 
             this.submit.addEventListener("click", (e) => {
                 e.preventDefault();
-                console.log('[Contact Form Debug] ========== FORM SUBMIT START ==========');
 
                 const form = $(this.form);
                 const formElement = this.form;
 
-                console.log('[Contact Form Debug] Checking grecaptcha...');
-                console.log('[Contact Form Debug] typeof grecaptcha:', typeof grecaptcha);
-                
                 if (typeof grecaptcha === 'undefined') {
-                    console.error('[Contact Form Debug] ❌ grecaptcha is UNDEFINED!');
                     form.parent().find('.form__error').html("reCAPTCHA not loaded. Please refresh the page.").addClass("active");
                     return;
                 }
-                console.log('[Contact Form Debug] ✅ grecaptcha available');
-                console.log('[Contact Form Debug] Site key:', contact.rcSiteKey);
 
                 grecaptcha.ready(() => {
-                    console.log('[Contact Form Debug] ✅ grecaptcha.ready() fired');
-                    console.log('[Contact Form Debug] Form validity:', formElement.checkValidity());
-                    
                     if (formElement.checkValidity()) {
-                        console.log('[Contact Form Debug] Executing grecaptcha.execute()...');
 
                         grecaptcha.execute(contact.rcSiteKey, {
                             action: 'submit'
                         }).then(function (token) {
-                            console.log('[Contact Form Debug] ✅ Token received:', token ? token.substring(0, 50) + '...' : 'EMPTY');
 
                             if (!token) {
-                                console.error('[Contact Form Debug] ❌ Token is empty!');
-                                form.parent().find('.form__error').html("reCAPTCHA token empty. Please refresh.").addClass("active");
+                                form.parent().find('.form__error').html("reCAPTCHA verification failed. Please refresh.").addClass("active");
                                 return;
                             }
 
                             const action = form.attr("send");
                             const title = form.attr("title");
-
-                            console.log('[Contact Form Debug] AJAX Request:');
-                            console.log('[Contact Form Debug] - URL:', ajaxUrl);
-                            console.log('[Contact Form Debug] - Action:', action);
-                            console.log('[Contact Form Debug] - Title:', title);
-                            console.log('[Contact Form Debug] Sending AJAX...');
 
                             $.ajax({
                                 type: 'POST',
@@ -88,10 +62,8 @@
                                 dataType: 'html',
                                 data: form.serialize() + '&action=' + action + '&title=' + title + '&g-recaptcha-response=' + token,
                                 success: function (resp) {
-                                    console.log('[Contact Form Debug] ✅ AJAX Response:', resp);
 
                                     if (resp === 'ok') {
-                                        console.log('[Contact Form Debug] ✅ SUCCESS!');
 
                                         form.parent().find('.form__error').removeClass("active");
 
@@ -105,7 +77,6 @@
                                         form.find(".privacy-policy-js").prop("checked", false);
 
                                         if (contact.redirect_on_submit) {
-                                            console.log('[Contact Form Debug] Redirecting to:', contact.redirect_on_submit);
                                             window.location.href = contact.redirect_on_submit;
                                         } else {
                                             form.find(".form__thanks").addClass("active");
@@ -115,36 +86,25 @@
                                         }
 
                                     } else {
-                                        console.error('[Contact Form Debug] ❌ Server error:', resp);
                                         form.parent().find('.form__error').html(resp).addClass("active");
                                         form.parent().find('.form__thanks').removeClass("active");
                                     }
                                 },
-                                error: function (xhr, status, error) {
-                                    console.error('[Contact Form Debug] ❌ AJAX FAILED!');
-                                    console.error('[Contact Form Debug] Status:', status);
-                                    console.error('[Contact Form Debug] Error:', error);
-                                    console.error('[Contact Form Debug] Response:', xhr.responseText);
-                                    console.error('[Contact Form Debug] Status Code:', xhr.status);
+                                error: function () {
                                     form.parent().find('.form__error').html("There was an error trying to send your message. Please try again later.").addClass("active");
                                     form.parent().find('.form__error').addClass("active");
                                     form.parent().find('.form__thanks').removeClass("active");
                                 }
-                            }).always(function () {
-                                console.log('[Contact Form Debug] ========== FORM SUBMIT END ==========');
-                            })
+                            }).always(function () {})
                         }).catch(function(error) {
-                            console.error('[Contact Form Debug] ❌ grecaptcha.execute() FAILED:', error);
-                            form.parent().find('.form__error').html("reCAPTCHA error. Check domain registration.").addClass("active");
+                            form.parent().find('.form__error').html("reCAPTCHA error. Please refresh and try again.").addClass("active");
                         });
                     } else {
-                        console.log('[Contact Form Debug] ❌ Form validation failed');
                         formElement.reportValidity();
                     }
                 });
 
             });
-            console.log('[Contact Form Debug] ✅ Events attached');
         }
 
     }
