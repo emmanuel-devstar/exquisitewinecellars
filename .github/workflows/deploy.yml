@@ -22,7 +22,7 @@ jobs:
           protocol: sftp
           port: 22
           local-dir: ./
-          server-dir: /htdocs/wp-content/themes/${{ secrets.PRESSABLE_THEME_DIR }}/
+          server-dir: ${{ secrets.PRESSABLE_THEME_PATH }}/
           exclude: |
             **/.git*
             **/.git*/**
