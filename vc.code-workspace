@@ -1,0 +1,39 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"workbench.iconTheme": "material-icon-theme",
+		"php.validate.executablePath": "C:/xampp/php/php.exe",
+		"phpserver.phpPath": "C:/xampp/php/php.exe",
+		"liveSassCompile.settings.formats": [
+			// This is Default.
+			{
+				"format": "expanded",
+				"extensionName": ".css",
+				"savePath": "/css/"
+			},
+			{
+				"format": "compressed",
+				"extensionName": ".min.css",
+				"savePath": "/css/"
+			},
+
+		],
+		"liveSassCompile.settings.autoprefix": [
+			"> 1%",
+			"last 3 versions"
+		],
+		"liveSassCompile.settings.generateMap": false,
+		"liveSassCompile.settings.excludeList": [
+			".vscode/**",
+		],
+		"liveSassCompile.settings.includeItems": [
+			"scss/style.scss",		
+			"scss/gutenberg.scss"
+		]
+
+	}
+}

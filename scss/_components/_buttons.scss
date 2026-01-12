@@ -1,0 +1,210 @@
+@mixin btn {
+  @include fontSize(16px);
+  font-family: var(--modular-secondary-font);
+  letter-spacing: 1px;
+  font-weight: 500;
+  line-height: 1.2em;
+
+  text-align: center;
+
+  padding: calcRem(25px) calcRem(55px);
+
+  cursor: pointer;
+  text-decoration: none !important;
+  display: inline-block;
+  text-transform: uppercase;
+  z-index: 10;
+  border: none;
+
+  -webkit-appearance: none !important;
+
+  &:not(.g-recaptcha-v3) {
+    &:disabled {
+      background-color: rgba($gray, 0.7) !important;
+      border: 1px solid rgba($gray, 0.7) !important;
+      color: $white !important;
+      cursor: default !important;
+      &:hover {
+        background-color: rgba($gray, 0.7) !important;
+        border: 1px solid rgba($gray, 0.7) !important;
+        color: $white !important;
+        cursor: default !important;
+      }
+    }
+  }
+}
+
+@mixin btn--round {
+  border-radius: 25px !important;
+}
+
+.btn {
+  @include btn;
+}
+
+.btn--round {
+  @include btn;
+  @include btn--round;
+}
+
+.btn--small {
+  padding: calcRem(20px) calcRem(40px) !important;
+}
+
+.btn--outline-white {
+  @include tran-all;
+
+  background-color: transparent;
+  border: 1px solid $white;
+  color: $white;
+}
+
+.btn--outline-gray {
+  @include tran-all;
+
+  background-color: transparent;
+  border: 1px solid $gray;
+  color: $gray;
+}
+
+.btn--outline-black {
+  @include tran-all;
+
+  background-color: transparent;
+  border: 1px solid $black;
+  color: $black;
+}
+
+.btn--outline-highlighted {
+  @include tran-all;
+
+  background-color: transparent;
+  border: 1px solid $highlighted;
+  color: $white;
+}
+
+.btn--black {
+  @include tran-all;
+
+  background-color: $black;
+  color: $white !important;
+
+  border: 1px solid $black;
+}
+
+.btn--highlighted {
+  @include tran-all;
+
+  background-color: $highlighted;
+  color: $white;
+
+  border: 1px solid $highlighted;
+}
+
+.btn--white {
+  @include tran-all;
+
+  background-color: $white;
+  color: $black !important;
+
+  border: 1px solid $white;
+}
+
+.hover-white {
+  &:hover {
+    color: $black !important;
+    background-color: $white !important;
+    border: 1px solid $white !important;
+  }
+}
+
+.hover-black {
+  &:hover {
+    color: $white !important;
+    background-color: $black !important;
+    border: 1px solid $black !important;
+  }
+}
+
+.hover-highlighted {
+  &:hover {
+    color: $white !important;
+    background-color: $highlighted !important;
+    border: 1px solid $highlighted !important;
+  }
+}
+
+.section-white {
+  .hover-white {
+    &:hover {
+      border: 1px solid $highlighted !important;
+    }
+  }
+}
+.section-bright {
+  .hover-white {
+    &:hover {
+      border: 1px solid $white !important;
+    }
+  }
+}
+
+.hover-black {
+  &:hover {
+    color: $white !important;
+    background-color: $black;
+    border: 1px solid $black;
+  }
+}
+
+.hover-gray {
+  &:hover {
+    color: $white !important;
+    background-color: $black;
+    border: 1px solid $black;
+  }
+}
+
+.hover-transparent {
+  &:hover {
+    color: $white;
+    background-color: transparent !important;
+  }
+}
+
+.hover-outline-highlighted {
+  &:hover {
+    color: $highlighted !important;
+    background-color: transparent !important;
+    border: 1px solid $highlighted !important;
+  }
+}
+
+.o-next-btn,
+.o-prev-btn {
+  @extend .btn;
+  @extend .btn--outline-black;
+  @extend .btn--small;
+  text-decoration: none;
+
+  .icon {
+    font-size: 1.3em;
+    padding-bottom: 3px;
+  }
+}
+
+.std-btn-primary {
+  @extend .btn;
+}
+
+.std-btn-secondary {
+  @extend .btn;
+}
+
+.std-btn-tertiary {
+  @extend .btn;
+}
+
+.std-btn-quaternary {
+  @extend .btn;
+}

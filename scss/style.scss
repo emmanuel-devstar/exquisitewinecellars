@@ -1,0 +1,48 @@
+@import '_variables';
+@import '_mixins';
+@import '_normalize';
+@import '_utilities';
+@import '_layout';
+@import '_grid.scss';
+@import '_objects';
+@import '_zindex';
+@import '_others';
+
+@import '_colors';
+
+@import '_components/top/header';
+@import '_components/top/burger';
+@import '_components/top/menu';
+
+//@import '_components/banner';
+
+@import '_components/sections';
+
+@import '_components/pagination';
+@import '_components/breadcrumb-yoast';
+@import '_components/breadcrumb';
+
+@import '_components/footer';
+
+@import '_components/menu-horiz';
+@import '_components/card';
+@import '_components/tile';
+@import '_components/form';
+@import '_components/modals';
+
+@import '_components/accordion';
+@import '_components/cookieconsent';
+
+@import '_components/buttons';
+@import '_components/dropdown';
+@import '_components/sidebar';
+@import '_components/pagetext';
+@import '_components/others';
+
+@import '_blocks/section-text-image';
+@import '_blocks/banner';
+
+
+@import '_animations';
+
+

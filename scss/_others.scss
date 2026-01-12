@@ -1,0 +1,40 @@
+.border {
+    border: 1px solid $black;
+}
+
+.o-cell {
+    border: 1px solid $black;
+    height: 100px;
+    background-color: yellowgreen;
+}
+
+.owl-nav {
+    display: none;
+}
+
+.grecaptcha-badge {
+    z-index: 100 !important;
+    visibility: hidden;
+
+    &.visible {
+        visibility: visible;
+    }
+}
+
+.single-published {
+    font-weight: 500;
+    margin-bottom: 0 !important;
+
+    span {
+        font-weight: 400 !important;
+    }
+}
+
+/* fix for imagify */
+picture[decoding="async"] {
+    img{
+        height: 100%;
+        width: 100%;
+        
+    }
+}
