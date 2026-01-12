@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+  workflow_dispatch:
 
 jobs:
   deploy:
@@ -13,24 +14,37 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Deploy to Pressable via SFTP
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
-        with:
-          server: sftp.pressable.com
-          username: ${{ secrets.PRESSABLE_SSH_USERNAME }}
-          password: ${{ secrets.PRESSABLE_SSH_PASSWORD }}
-          protocol: sftp
-          port: 22
-          local-dir: ./
-          server-dir: ${{ secrets.PRESSABLE_THEME_PATH }}/
-          exclude: |
-            **/.git*
-            **/.git*/**
-            **/node_modules/**
-            **/.github/**
-            **/scss/**
-            **/*.md
-            **/package*.json
-            **/composer.json
-            **/webpack.config.js
-            **/.gitignore
+      - name: Install sshpass
+        run: sudo apt-get install -y sshpass
+
+      - name: Deploy reCAPTCHA fix files only
+        env:
+          SSHPASS: ${{ secrets.PRESSABLE_SSH_PASSWORD }}
+          SSH_USER: ${{ secrets.PRESSABLE_SSH_USERNAME }}
+          THEME_PATH: ${{ secrets.PRESSABLE_THEME_PATH }}
+        run: |
+          # Create list of files to deploy (reCAPTCHA fix only)
+          FILES=(
+            "inc/hooks.php"
+            "header.php"
+            "inc/utilities.php"
+            "footer.php"
+            "blocks/text/text.php"
+            "blocks/usp/usp.php"
+            "inc/lib/Configuration.php"
+            "template-parts/load-recaptcha-v3.php"
+            "blocks/banner-with-form/full-width.php"
+          )
+          
+          # Upload each file via SFTP
+          for file in "${FILES[@]}"; do
+            echo "Uploading $file..."
+            dir=$(dirname "$file")
+            sshpass -e sftp -o StrictHostKeyChecking=no -o ConnectTimeout=10 ${SSH_USER}@sftp.pressable.com <<EOF
+          cd ${THEME_PATH}
+          -mkdir ${dir}
+          put ${file} ${file}
+          EOF
+          done
+          
+          echo "✅ reCAPTCHA fix files deployed successfully!"
