@@ -1,0 +1,36 @@
+name: Deploy to Pressable
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Deploy to Pressable via SFTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: sftp.pressable.com
+          username: ${{ secrets.PRESSABLE_SSH_USERNAME }}
+          password: ${{ secrets.PRESSABLE_SSH_PASSWORD }}
+          protocol: sftp
+          port: 22
+          local-dir: ./
+          server-dir: /htdocs/wp-content/themes/modular/
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/node_modules/**
+            **/.github/**
+            **/scss/**
+            **/*.md
+            **/package*.json
+            **/composer.json
+            **/webpack.config.js
+            **/.gitignore
